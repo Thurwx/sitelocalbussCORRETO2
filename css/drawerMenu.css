@@ -1,0 +1,101 @@
+/* Estilos padrões */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    transition: background-color 0.3s, color 0.3s;
+    overflow: hidden;  /* Impede o scroll da página */
+   
+    
+}
+
+/* Menu lateral */
+#drawer-menu {
+    height: 49%;
+    width: 200px; /* Reduzindo a largura do menu lateral */
+    position: fixed;
+    top: 0;
+    left: -200px; /* Ajustando a posição para a nova largura */
+    background-color: #dfdfdf;
+    color: white;
+    padding-top: 90px;
+    border-radius: 20px;
+    z-index: 1050; /* Para garantir que o menu fique sobre outros elementos */
+    transition: left 0.5s ease, background-color 0.3s; /* Animação mais lenta para abrir/fechar e transição suave para a cor do fundo */
+}
+
+/* Botão de alternância do menu */
+#menu-toggle {
+    position: absolute;
+    width: 60px;
+    top: 9px;
+    left: 10px;
+    z-index: 1060;
+    font-size: 30px; /* Ajuste do tamanho do ícone do menu */
+    background-color: transparent;
+    border: transparent;
+    color: transparent;
+    cursor: pointer;
+    transition: color 0.3s ease; /* Adiciona transição suave na cor */
+}
+
+/* Modo claro */
+body {
+    background-color: rgb(244, 244, 244); /* Fundo cinza claro */
+    color: #000000;
+}
+
+#drawer-menu {
+    background-color: rgba(8, 52, 134, 0.993);
+}
+
+#menu-toggle {
+    color: rgb(0, 0, 0); /* Cor preta para o botão no modo claro */
+}
+
+
+
+/* Transições suaves */
+body, #drawer-menu {
+    transition: background-color 0.3s, color 0.3s;
+}
+
+/* Estilos para o título */
+#site-title {
+    font-family: "Verdana", "Tahoma", "Arial", sans-serif; /* Fonte Sem Serifa */
+    cursor: pointer; /* Altera o cursor para indicar que é clicável */
+    transition: color 0.3s ease; /* Transição suave na cor ao passar o mouse */
+    z-index: 9999; /* Garantir que o título esteja acima de outros elementos */
+    position: center; /* Garantir que o z-index funcione corretamente */
+    font-size: 24px; /* Tamanho da fonte reduzido */
+    margin-top: 10px;
+}
+
+/* Quando o mouse passar sobre o título */
+#site-title:hover {
+    color: #ddd; /* Cor mais clara para indicar que o título está interativo */
+}
+/* Estilos para a imagem do logo */
+.img-logo {
+    margin-top: -70px; /* Ajuste o valor conforme necessário */
+    margin-bottom: 40px;
+    width: 200px;
+    height: auto;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+/* Cor branca para o botão */
+#menu-toggle.white {
+    color: rgb(255, 255, 255); /* Cor do ícone de menu para branco */
+}
+
+/* Cor preta para o botão */
+#menu-toggle.black {
+    color: rgb(255, 255, 255); /* Cor do ícone de menu para preto */
+}
+
+/* Estilo inicial do botão - garantindo que a cor padrão seja preta */
+#menu-toggle {
+    color: rgb(255, 255, 255); /* Cor preta por padrão */
+}

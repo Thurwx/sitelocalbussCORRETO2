@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mapa</title>
+    <link rel="stylesheet" href="css/drawerMenu.css">
+    <!-- Importação da folha de estilo do Leaflet -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <!-- Importação da folha de estilo da Leaflet Routing Machine -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.css" />
+    <!-- Importação de ícones do Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Importação do Bootstrap -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Importação da biblioteca de ícones do Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- Importação da biblioteca principal do Leaflet -->
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://npmcdn.com/parse/dist/parse.min.js"></script>
+</head>
+<body>
+   <div style="background-color: rgba(8, 52, 134, 0.993); padding:1px; color: white; text-align: center;">
+    <h1 id="site-title" style="font-size: 24px;">LOCALBUSS</h1> <!-- Reduzido o tamanho da fonte -->
+</div>
+    <!-- Botão de alternância do menu lateral -->
+        <button id="menu-toggle" class=" fas fa-bars">
+           
+        </button>
+
+    <!-- Menu lateral -->
+    <div id="drawer-menu">
+        <br>
+        <br>
+        <!-- Imagem dentro do menu lateral -->
+        <img src="assets/LT.png" alt="Logo" class="img-fluid img-logo" style="margin-bottom: 20px; width: 200px; height: auto; display: block; margin-left: auto; margin-right: auto;">
+        
+        <!-- Select de rotas estilizado com Bootstrap -->
+        <select id="nome-rotas" class="form-control position-absolute" style="top: 280px; left: 50%; transform: translateX(-50%); width: 180px; z-index: 1000; margin-top: 0px;"></select>
+        
+        <!-- Ícone do Instagram (linkando para o perfil) -->
+        <a href="https://www.instagram.com/locallbuss/" target="_blank" style="display: block; text-align: center; margin-top: 100px; margin-left: 0px;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="white" class="bi bi-instagram" viewBox="0 0 16 16">
+                <path d="M8 0C5.829 0 5.556.01 4.703.048 3.85.088 3.269.222 2.76.42a3.9 3.9 0 0 0-1.417.923A3.9 3.9 0 0 0 .42 2.76C.222 3.268.087 3.85.048 4.7.01 5.555 0 5.827 0 8.001c0 2.172.01 2.444.048 3.297.04.852.174 1.433.372 1.942.205.526.478.972.923 1.417.444.445.89.719 1.416.923.51.198 1.09.333 1.942.372C5.555 15.99 5.827 16 8 16s2.444-.01 3.298-.048c.851-.04 1.434-.174 1.943-.372a3.9 3.9 0 0 0 1.416-.923c.445-.445.718-.891.923-1.417.197-.509.332-1.09.372-1.942C15.99 10.445 16 10.173 16 8s-.01-2.445-.048-3.299c-.04-.851-.175-1.433-.372-1.941a3.9 3.9 0 0 0-.923-1.417A3.9 3.9 0 0 0 13.24.42c-.51-.198-1.092-.333-1.943-.372C10.443.01 10.172 0 7.998 0zm-.717 1.442h.718c2.136 0 2.389.007 3.232.046.78.035 1.204.166 1.486.275.373.145.64.319.92.599s.453.546.598.92c.11.281.24.705.275 1.485.039.843.047 1.096.047 3.231s-.008 2.389-.047 3.232c-.035.78-.166 1.203-.275 1.485a2.5 2.5 0 0 1-.599.919c-.28.28-.546.453-.92.598-.28.11-.704.24-1.485.276-.843.038-1.096.047-3.232.047s-2.39-.009-3.233-.047c-.78-.036-1.203-.166-1.485-.276a2.5 2.5 0 0 1-.92-.598 2.5 2.5 0 0 1-.6-.92c-.109-.281-.24-.705-.275-1.485-.038-.843-.046-1.096-.046-3.233s.008-2.388.046-3.231c.036-.78.166-1.204.276-1.486.145-.373.319-.64.599-.92s.546-.453.92-.598c.282-.11.705-.24 1.485-.276.738-.034 1.024-.044 2.515-.045zm4.988 1.328a.96.96 0 1 0 0 1.92.96.96 0 0 0 0-1.92m-4.27 1.122a4.109 4.109 0 1 0 0 8.217 4.109 4.109 0 0 0 0-8.217m0 1.441a2.667 2.667 0 1 1 0 5.334 2.667 2.667 0 0 1 0-5.334"/>
+            </svg>
+        </a>
+    </div>
+
+    <!-- Div que contém o mapa -->
+    <div id="map" style="height: 100vh; width: 100vw; margin: 0;"></div>
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+
+    <!-- Importação da Leaflet Routing Machine -->
+    <script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.js"></script>
+
+    <script src="js/funcao.js"></script> <!-- Funções adicionais -->
+
+    <script>
+        // Inicializa o mapa
+        initMap([-23.10405, -47.71371], 'map', 15);
+
+        // Função para recarregar a página ao clicar no título
+        document.addEventListener("DOMContentLoaded", function() {
+            document.getElementById("site-title").addEventListener("click", function() {
+                location.reload();  // Recarrega a página
+            });
+        });
+
+        // Função para alternar o menu lateral
+        $("#menu-toggle").click(function() {
+            var menu = $("#drawer-menu");
+
+            // Alterna a posição do menu (abre ou fecha)
+            if (menu.css("left") === "-250px") {
+                menu.css("left", "0"); // Abrir o menu
+            } else {
+                menu.css("left", "-250px"); // Fechar o menu
+            }
+
+            // Alterna a cor do botão entre branca e preta
+            if ($(this).hasClass("black")) {
+                $(this).removeClass("black").addClass("white");
+            } else {
+                $(this).removeClass("white").addClass("black");
+            }
+
+            // Remove o foco do botão para evitar a borda azul
+            $(this).blur(); 
+        });
+
+        // Fechar o menu quando um item for selecionado
+        $("#nome-rotas").change(function() {
+            var selectedValue = $(this).val();
+            if (selectedValue) {
+                // Fechar o menu lateral
+                $("#drawer-menu").css("left", "-250px");
+                $("#menu-toggle").removeClass("white").addClass("black"); // Resetar a cor do ícone
+            }
+        });
+
+        // Fechar o menu quando clicar fora do menu, mas não no ícone de alternância de tema
+        $(document).click(function(event) {
+            var menu = $("#drawer-menu");
+            var toggleButton = $("#menu-toggle");
+            var moonIcon = $("#moon-icon"); // Seleciona o ícone de alternância de tema
+            
+            // Verifica se o clique foi fora do menu e do botão de alternância
+            if (!menu.is(event.target) && !toggleButton.is(event.target) && !moonIcon.is(event.target) && menu.has(event.target).length === 0) {
+                menu.css("left", "-250px"); // Fecha o menu
+                toggleButton.removeClass("white").addClass("black"); // Resetar a cor do ícone
+            }
+        });     
+    </script>
+</body>
+</html>

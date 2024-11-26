@@ -1,0 +1,53 @@
+// Função para adicionar marcadores no mapa
+const adicionarMarcadores = async () => {
+    locais = await listarLocaisAtuais((locais) => {
+        if (locais && locais.length > 0) {
+            locais.forEach(local => {
+                console.log(`Processando local: ${local.name}`); // Log para depuração
+                // Verifica se a propriedade 'path' existe e contém coordenadas
+                if (local.path && local.path.length > 0) {
+                    local.path.forEach(coordenada => {
+                        // Seleciona o ícone baseado no nome da rota
+                        let iconRoute;
+                        switch (local.name) {
+                            case 'Cohab/Santa Maria':
+                                iconRoute = L.icon({ iconUrl: './assets/bussMarkerAzul.png', iconSize: [25, 41], iconAnchor: [12, 41] });
+                                break;
+                            case 'São Pedro':
+                                iconRoute = L.icon({ iconUrl: './assets/bussMarkerVerde.png', iconSize: [25, 41], iconAnchor: [12, 41] });
+                                break;
+                            case 'Emilio Gardenal':
+                                iconRoute = L.icon({ iconUrl: './assets/bussMarkerRed.png', iconSize: [25, 41], iconAnchor: [12, 41] });
+                                break;
+                            case 'Povo Feliz':
+                                iconRoute = L.icon({ iconUrl: './assets/bussMarkerRoxo.png', iconSize: [25, 41], iconAnchor: [12, 41] });
+                                break;
+                            case 'São Roque/Bonanza':
+                                iconRoute = L.icon({ iconUrl: './assets/bussMarkerLaranja.png', iconSize: [25, 41], iconAnchor: [12, 41] });
+                                break;
+                            default:
+                                iconRoute = L.icon({ iconUrl: './assets/bussMarker.png', iconSize: [25, 41], iconAnchor: [12, 41] });
+                        }
+
+                        console.log(`Ícone selecionado para ${local.name}: ${iconRoute.options.iconUrl}`); // Log para ver qual ícone foi selecionado
+
+                        // Cria o marcador com as coordenadas do 'path'
+                        const marcador = L.marker([coordenada.latitude, coordenada.longitude], {
+                            clickable: false,
+                            draggable: false,
+                            icon: iconRoute
+                        }).addTo(mymap);
+
+                        // Se quiser adicionar algum popup ou outros comportamentos, pode ser feito aqui
+                        marcador.bindPopup(`<b>${local.name}</b><br>Latitude: ${coordenada.latitude}<br>Longitude: ${coordenada.longitude}`);
+                    });
+                }
+            });
+        } else {
+            console.log('Nenhum local encontrado para adicionar marcadores.');
+        }
+    });
+};
+
+// Chama a função para adicionar os marcadores no mapa
+adicionarMarcadores();

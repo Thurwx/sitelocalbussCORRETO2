@@ -1,0 +1,184 @@
+// Inicializa o Parse
+Parse.initialize("arjJzEgN7cooqvlcKclRSbD99VdjMHmrQIptuBMa", "Sj6bYZp9fInqFjtgPlyzaDwRgLKCtqQuYnR453Bc");
+Parse.serverURL = "https://parseapi.back4app.com/";
+
+let mymap = null;
+let routeControl = null; // Armazena a rota atual exibida
+let currentPolyline = null; // Armazena a polilinha atual
+
+// Cores para as rotas
+const routeColors = {
+    "Cohab/Santa Maria": '#195e63',
+    "São Pedro": '#a9f04d',
+    "Emilio Gardenal": '#fb0c06',
+    "Povo Feliz": '#551bb3',
+    "São Roque/Bonanza": '#ffc52c'
+};
+
+// Ícones para as rotas
+const routeIcons = {
+    "Cohab/Santa Maria": L.icon({ iconUrl: './assets/bussMarkerAzul.png', iconSize: [25, 41], iconAnchor: [12, 41] }),
+    "São Pedro": L.icon({ iconUrl: './assets/bussMarkerVerde.png', iconSize: [25, 41], iconAnchor: [12, 41] }),
+    "Emilio Gardenal": L.icon({ iconUrl: './assets/bussMarkerRed.png', iconSize: [25, 41], iconAnchor: [12, 41] }),
+    "Povo Feliz": L.icon({ iconUrl: './assets/bussMarkerRoxo.png', iconSize: [25, 41], iconAnchor: [12, 41] }),
+    "São Roque/Bonanza": L.icon({ iconUrl: './assets/bussMarkerLaranja.png', iconSize: [25, 41], iconAnchor: [12, 41] })
+};
+
+// Inicializa o mapa
+const initMap = (position = [], sessionMap, zoom) => {
+    mymap = L.map(sessionMap, {
+        zoomControl: false,  // Remove os controles de zoom (+ e -)
+        scrollWheelZoom: true  // Permite zoom com o scroll do mouse
+    }).setView(position, zoom);
+
+    // Adicionando a camada de transporte público
+    L.tileLayer('https://{s}.tile.thunderforest.com/transport/{z}/{x}/{y}.png?apikey={apikey}', {
+        attribution: '&copy; <a href="https://www.thunderforest.com/maps/transport/">Thunderforest</a>, &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors',
+        apikey: '22f111fff9184ca791ce78c304a8bb00'  // Insira sua chave de API do Thunderforest
+    }).addTo(mymap);
+};
+
+// Função para adicionar pontos de rota no mapa
+const addPontos = (coordenadas = [], nomeRota) => {
+    // Limpa a rota anterior, se existir
+    if (routeControl) {
+        mymap.removeControl(routeControl);
+    }
+
+    // Remove a polilinha anterior, se existir
+    if (currentPolyline) {
+        mymap.removeLayer(currentPolyline);
+    }
+
+    // Converte coordenadas em pontos
+    let way_points = coordenadas.map(coord => L.latLng(coord.latitude, coord.longitude));
+    let lineColor = routeColors[nomeRota] || 'black'; // Define a cor da rota com base no nome
+
+    // Desenhar a nova polilinha entre os pontos
+    currentPolyline = L.polyline(way_points, { color: lineColor, weight: 3 }).addTo(mymap);
+
+    // Ajusta o mapa para mostrar todos os pontos da rota
+    mymap.fitBounds(currentPolyline.getBounds());
+    
+    // Não adiciona marcadores, apenas a polilinha
+};
+
+// Função para listar as rotas
+const listarRotas = async (callback) => {
+    const Rota = Parse.Object.extend('Rota');
+    const query = new Parse.Query(Rota);
+    try {
+        const results = await query.find();
+        console.log('Rotas encontradas:', results); // Log para verificar as rotas encontradas
+        let id_nome = [];
+        for (const object of results) {
+            id_nome.push({
+                id: object.id,
+                nome: object.get('name')
+            });
+        }
+        callback(id_nome);
+    } catch (error) {
+        console.error('Error while fetching Rota', error);
+    }
+};
+
+// Função para consultar rotas por ID
+const consultarRotasPorIs = async (id, callback) => {
+    const Rota = Parse.Object.extend('Rota');
+    const query = new Parse.Query(Rota);
+    
+    try {
+        const results = await query.equalTo('objectId', id).find();
+        
+        if (results.length > 0) {
+            let rota_selecionada = {
+                id: id,
+                nome: results[0].get('name'),
+                path: results[0].get('path')
+            };
+            callback(rota_selecionada);
+        } else {
+            callback(null);
+        }
+    } catch (error) {
+        console.error('Error while fetching Rota', error);
+        callback(null);
+    }
+};
+
+// Função para listar os locais atuais
+const listarLocaisAtuais = async (callback) => {
+    const LocAtual = Parse.Object.extend('LocAtual');
+    const query = new Parse.Query(LocAtual);
+
+    try {
+        const results = await query.find();
+        console.log('Locais atuais encontrados:', results); // Log para verificar os locais encontrados
+        let locais = [];
+
+        for (const object of results) {
+            locais.push({
+                objectId: object.id,
+                routeId: object.get('routeId'),
+                name: object.get('name'),
+                path: object.get('path') // Assuming path is an array of coordinates
+            });
+        }
+
+        callback(locais);
+    } catch (error) {
+        console.error('Error while fetching LocAtual', error);
+    }
+};
+
+// Função para adicionar marcadores no mapa
+const adicionarMarcadores = async () => {
+    const locais = await listarLocaisAtuais((locais) => {
+        if (locais && locais.length > 0) {
+            locais.forEach(local => {
+                // Verifica se a propriedade 'path' existe e contém coordenadas
+                if (local.path && local.path.length > 0) {
+                    local.path.forEach(coordenada => {
+                        // Seleciona o ícone baseado no nome da rota
+                        let iconRoute;
+                        switch (local.name) {
+                            case 'Cohab/Santa Maria':
+                                iconRoute = routeIcons["Cohab/Santa Maria"];
+                                break;
+                            case 'São Pedro':
+                                iconRoute = routeIcons["São Pedro"];
+                                break;
+                            case 'Emilio Gardenal':
+                                iconRoute = routeIcons["Emilio Gardenal"];
+                                break;
+                            case 'Povo Feliz':
+                                iconRoute = routeIcons["Povo Feliz"];
+                                break;
+                            case 'São Roque/Bonanza':
+                                iconRoute = routeIcons["São Roque/Bonanza"];
+                                break;
+                            default:
+                                iconRoute = L.icon({ iconUrl: './assets/bussMarker.png', iconSize: [25, 41], iconAnchor: [12, 41] });
+                        }
+
+                        // Cria o marcador com as coordenadas do 'path'
+                        const marcador = L.marker([coordenada.latitude, coordenada.longitude], {
+                            clickable: false,
+                            draggable: false,
+                            icon: iconRoute
+                        }).addTo(mymap);
+
+                        // Se quiser adicionar algum popup ou outros comportamentos, pode ser feito aqui
+                        marcador.bindPopup(`<b>${local.name}</b><br>Latitude: ${coordenada.latitude}<br>Longitude: ${coordenada.longitude}`);
+                    });
+                }
+            });
+        } else {
+            console.log('Nenhum local encontrado para adicionar marcadores.');
+        }
+    });
+};
+
+// Chama a função para adicionar os marcadores no mapa
+adicionarMarcadores();
