@@ -5,23 +5,21 @@ body {
     padding: 0;
     transition: background-color 0.3s, color 0.3s;
     overflow: hidden;  /* Impede o scroll da página */
-   
-    
 }
 
 /* Menu lateral */
 #drawer-menu {
-    height: 49%;
-    width: 200px; /* Reduzindo a largura do menu lateral */
+    height: 50%;
+    width: 200px; /* Largura padrão do menu */
     position: fixed;
     top: 0;
-    left: -200px; /* Ajustando a posição para a nova largura */
+    left: -200px; /* Inicialmente fora da tela */
     background-color: #dfdfdf;
     color: white;
     padding-top: 90px;
     border-radius: 20px;
     z-index: 1050; /* Para garantir que o menu fique sobre outros elementos */
-    transition: left 0.5s ease, background-color 0.3s; /* Animação mais lenta para abrir/fechar e transição suave para a cor do fundo */
+    transition: left 0.5s ease, background-color 0.3s; /* Animação suave */
 }
 
 /* Botão de alternância do menu */
@@ -31,12 +29,12 @@ body {
     top: 9px;
     left: 10px;
     z-index: 1060;
-    font-size: 30px; /* Ajuste do tamanho do ícone do menu */
+    font-size: 30px; /* Tamanho do ícone */
     background-color: transparent;
     border: transparent;
     color: transparent;
     cursor: pointer;
-    transition: color 0.3s ease; /* Adiciona transição suave na cor */
+    transition: color 0.3s ease; /* Transição suave para a cor */
 }
 
 /* Modo claro */
@@ -50,52 +48,153 @@ body {
 }
 
 #menu-toggle {
-    color: rgb(0, 0, 0); /* Cor preta para o botão no modo claro */
-}
-
-
-
-/* Transições suaves */
-body, #drawer-menu {
-    transition: background-color 0.3s, color 0.3s;
+    color: rgb(0, 0, 0); /* Cor do botão no modo claro */
 }
 
 /* Estilos para o título */
 #site-title {
-    font-family: "Verdana", "Tahoma", "Arial", sans-serif; /* Fonte Sem Serifa */
-    cursor: pointer; /* Altera o cursor para indicar que é clicável */
-    transition: color 0.3s ease; /* Transição suave na cor ao passar o mouse */
-    z-index: 9999; /* Garantir que o título esteja acima de outros elementos */
-    position: center; /* Garantir que o z-index funcione corretamente */
-    font-size: 24px; /* Tamanho da fonte reduzido */
+    font-family: "Verdana", "Tahoma", "Arial", sans-serif; /* Fonte sem serifa */
+    cursor: pointer;
+    transition: color 0.3s ease; /* Transição suave */
+    z-index: 9999;
+    position: center;
+    font-size: 24px; /* Tamanho da fonte */
     margin-top: 10px;
 }
 
-/* Quando o mouse passar sobre o título */
 #site-title:hover {
-    color: #ddd; /* Cor mais clara para indicar que o título está interativo */
+    color: #ddd; /* Cor ao passar o mouse */
 }
+
 /* Estilos para a imagem do logo */
 .img-logo {
-    margin-top: -70px; /* Ajuste o valor conforme necessário */
+    margin-top: -70px; 
     margin-bottom: 40px;
-    width: 200px;
+    width: 10%; /* Aumenta a largura da imagem em relação à tela */
     height: auto;
     display: block;
     margin-left: auto;
     margin-right: auto;
 }
+
 /* Cor branca para o botão */
 #menu-toggle.white {
-    color: rgb(255, 255, 255); /* Cor do ícone de menu para branco */
+    color: rgb(255, 255, 255); 
 }
 
 /* Cor preta para o botão */
 #menu-toggle.black {
-    color: rgb(255, 255, 255); /* Cor do ícone de menu para preto */
+    color: rgb(255, 255, 255); 
 }
 
-/* Estilo inicial do botão - garantindo que a cor padrão seja preta */
+/* Estilo inicial do botão - cor padrão preta */
 #menu-toggle {
-    color: rgb(255, 255, 255); /* Cor preta por padrão */
+    color: rgb(255, 255, 255); 
+}
+/* Estilos para o select */
+#nome-rotas {
+    position: absolute;
+    top: 280px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 180px;
+    z-index: 1000;
+    margin-top: 0;
+}
+
+/* Estilos para o ícone do Instagram */
+.instagram-icon {
+    display: block;
+    text-align: center;
+    margin-top: 100px;
+    margin-left: 0px;
+}
+
+.instagram-icon svg {
+    width: 30px;
+    height: 30px;
+    fill: white;
+}
+
+
+/* Responsividade com @media query para telas menores */
+
+/* Para telas com largura até 768px (tablets e celulares pequenos) */
+@media (max-width: 768px) {
+
+    #drawer-menu {
+        width:20%; /* Largura total da tela */
+        left: -100%; /* Menu começa fora da tela */
+        height: 35%;
+    }
+
+    #menu-toggle {
+        top: 15px;
+        left: 15px;
+        font-size: 35px; /* Ícone maior para facilitar o toque */
+    }
+
+    /* Reduzindo o tamanho da imagem do logo em telas pequenas */
+    .img-logo {
+        width: 50%; /* Ajusta a largura da imagem do logo */
+        margin-top: -80px;
+    }
+
+    #site-title {
+        font-size: 18px; /* Tamanho de fonte menor em dispositivos móveis */
+    }
+    #nome-rotas {
+        width: 140px; /* Reduzindo a largura do select */
+        top: 210px; /* Ajustando a posição */
+    }
+
+    .instagram-icon {
+        margin-top: 70px; /* Ajustando o espaço para o ícone */
+    }
+
+    .instagram-icon svg {
+        width: 25px; /* Reduzindo o tamanho do ícone */
+        height: 25px; /* Reduzindo o tamanho do ícone */
+    }
+}
+
+/* Para telas com largura até 480px (celulares) */
+@media (max-width: 480px) {
+
+    #drawer-menu {
+        width: 50%; /* Largura total da tela */
+        left: -100%; /* Menu começa fora da tela */
+        height: 50%;
+    }
+
+    #menu-toggle {
+        top: 7px;
+        left: 20px;
+        font-size: 33px; /* Ícone ainda maior para facilitar o toque */
+    }
+
+    /* Aumentando ainda mais a responsividade da imagem */
+    .img-logo {
+        width: 70%; /* Logo maior em telas ainda menores */
+        margin-bottom: 300px;
+        margin-top: -100px;
+
+    }
+
+    #site-title {
+        font-size: 16px; /* Ajustando o título */
+    }
+    #nome-rotas {
+        width: 170px; /* Aumentando a responsividade */
+        top: 220px; /* Ajustando ainda mais a posição */
+    }
+
+    .instagram-icon {
+        margin-top: 48px; /* Menos espaço no topo para o ícone */
+    }
+
+    .instagram-icon svg {
+        width: 40px; /* Ícone ainda menor */
+        height: 30px; /* Ícone ainda menor */
+    }
 }
